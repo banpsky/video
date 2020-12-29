@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./index.css">
+  <title>视频点播</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="main">
+      <div class="playerLeft">
+        <div class="leftBox">
+          <div class="vTitle">
+            <!-- TODO: 视频标题-->
+            <h4>{{pageTitle}}</h4>
+          </div>
+          <!-- TODO: 视频地址-->
+          <div class="videoBox">
+            <video class="video" duration="duration" :src="videoUrl" controls="controls">
+              您的浏览器不支持 video 标签。
+            </video>
+          </div>
+          <div class="videoInfo">
+            <div class="videoTextBox">
+              <img :src="videoData.img">
+              <h2>{{videoTitle}}</h2>
+              <p>{{videoData.type}}</p>
+              <p>全{{videoLen}}集</p>
+            </div>
+            
+            <div class="videoIntro">
+              <span>视频介绍</span>
+            </div>
+          </div>
+          <!-- TODO: 评论 -->
+          <div class="commentBox">
+            <div class="comtNum">
+              <p>{{videoData.userComment.length}}条评论</p>
+            </div>
+            <div class="comtHead">
+              <h3>评论</h3>
+            </div>
+            <!-- 发送评论 -->
+            <div class="comtSendBox">
+              <div class="comtUserMy">
+                <img src="./images/QQ.png">
+              </div>
+              <div class="comtEdit">
+                <textarea  placeholder="发送评论" class="ipt-txt">
+
+                </textarea>
+              </div>
+              <div class="comtSend">
+                <button>发送评论</button>
+              </div>
+              <!-- TODO: 用户评论 -->
+            </div>
+            <div class="comment" v-for="(comtItem,comtIndex) in videoData.userComment" :key="comtIndex">
+              <div class="comtUserImg">
+                <img :src="comtItem.userImg">
+              </div>
+              <div class="comtInfo">
+                <div class="comtUserName">
+                  <span>{{comtItem.userName}}</span>
+                </div>
+                <div class="comtText">
+                  <span>{{comtItem.comment}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 右边 -->
+      <div class="playerRight">
+        <div class="rightBox">
+          <!-- TODO: 用户信息-->
+          <div class="user">
+            <div class="userImg">
+              <img :src="myAcccount.userImg" alt="用户头像">
+            </div>
+            <div class="userText userName">{{myAcccount.userName}}</div>
+            <div class="userText userInfo">{{myAcccount.userIntro}}</div>
+            <div class="userText claer"></div>
+          </div>
+          <div class="vNumBox">
+            <div class="headBox">
+              <h3>视频选集</h3>
+            </div>
+            <!-- TODO: 视频选集-->
+            <ul class="vNum">
+              <li @click="changeVideo(idx)" :class="{ active:idx==isActive }" v-for="(video, idx) in videoData.pages" :key="idx">
+                <span>{{video.title}}</span>
+              </li>
+            </ul>
+          </div>
+          <!-- TODO: 推荐视频 -->
+          <div class="recommedBox">
+            <h4>推荐视频</h4>
+            <div class="recommed" v-for="(recomItem, recomIndex) in recommed" :key="recomIndex">
+              <div class="recomImg"><img src="./images/u0.jpg"></div>
+              <div class="clear"></div>
+              <div class="reText recomTitle">{{recomItem.title}}</div>
+              <div class="reText recomType">{{recomItem.type}}</div>
+              <div class="reText recomPages">全{{recomItem.pages.length}}集</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./vue.js"></script>
+  <script src="./data.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        videoUrl: "",
+        pageTitle: "",
+        videoTitle: "",
+        myAcccount: {
+          userName: "天启",
+          userImg: "./images/QQ.png",
+          userIntro: "此处为用户简介"
+        },
+        videoLen: 0,
+        isActive: false,
+        videoData: videoData,
+        recommed: recommed
+      },
+      created(){
+          this.pageTitle = this.videoData.pages[0].title;
+          this.videoUrl = this.videoData.pages[0].url;
+          this.videoTitle = this.videoData.title;
+          this.videoLen = this.videoData.pages.length;
+      },
+      methods: {
+        changeVideo(index) {
+          this.isActive = index;
+          this.videoUrl = this.videoData.pages[index].url;
+          this.pageTitle = this.videoData.pages[index].title;
+        }
+      },
+    })
+  </script>
+</body>
+</html>
